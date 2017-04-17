@@ -46,7 +46,7 @@ class FuncState(object):
     __slots__ = ('call_count', 'check_count')
 
     def __init__(self):
-        self.call_count = -1
+        self.call_count = 0
         self.check_count = 0
 
 
@@ -54,7 +54,7 @@ def pure_func(maxsize=128, typed=False, base=2):
     r"""Check if the function has no side-effects using sampling.
 
     Pure-func check
-    ===============
+    ---------------
 
     The distance between checks is *base* \\*\\* *checks* in function calls.
     Assuming *base=2* on third check it will be check again after 8 calls.
@@ -62,7 +62,7 @@ def pure_func(maxsize=128, typed=False, base=2):
     to occur.
 
     Least-recently-used cache
-    =========================
+    -------------------------
 
     If *maxsize* is set to None, the LRU features are disabled and the cache
     can grow without bound.
