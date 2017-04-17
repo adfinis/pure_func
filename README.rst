@@ -3,6 +3,9 @@
 Pure-func
 =========
 
+.. image:: https://travis-ci.org/adfinis-sygroup/pure_func.svg?branch=master
+    :target: https://travis-ci.org/adfinis-sygroup/pure_func
+
 Pure-func is a decorator that helps writing pure functions in python.
 
 In python it is impossible to determine if a function is pure for certain.

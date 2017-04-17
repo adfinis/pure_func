@@ -10,6 +10,9 @@ with codecs.open("README.rst", "w") as f:
 =========
 Pure-func
 =========
+
+.. image:: https://travis-ci.org/adfinis-sygroup/pure_func.svg?branch=master
+    :target: https://travis-ci.org/adfinis-sygroup/pure_func
 """)
     f.write(pure_func.__doc__)
     f.write("""
