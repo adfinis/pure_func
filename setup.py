@@ -20,7 +20,7 @@ with codecs.open('README.rst', 'r', encoding="UTF-8") as f:
 setup(
     name = "pure-func",
     version = __version__,
-    py_modules = "pure_func",
+    py_modules = ["pure_func"],
     entry_points = {
         'console_scripts': [
             "pure-func-test=pure_func:test"
