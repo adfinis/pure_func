@@ -12,8 +12,13 @@ with codecs.open("README.rst", "w") as f:
 Pure-func
 =========
 
-.. image:: https://travis-ci.org/adfinis-sygroup/pure_func.svg?branch=master
+|travis| |pypi|
+
+.. |travis| image:: https://travis-ci.org/adfinis-sygroup/pure_func.svg?branch=master  # noqa
     :target: https://travis-ci.org/adfinis-sygroup/pure_func
+
+.. |pypi| image:: https://badge.fury.io/py/pure-func.svg
+    :target: https://badge.fury.io/py/pure-func
 """)
     f.write(pure_func.__doc__)
     f.write("""

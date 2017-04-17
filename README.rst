@@ -3,8 +3,13 @@
 Pure-func
 =========
 
-.. image:: https://travis-ci.org/adfinis-sygroup/pure_func.svg?branch=master
+|travis| |pypi|
+
+.. |travis| image:: https://travis-ci.org/adfinis-sygroup/pure_func.svg?branch=master  # noqa
     :target: https://travis-ci.org/adfinis-sygroup/pure_func
+
+.. |pypi| image:: https://badge.fury.io/py/pure-func.svg
+    :target: https://badge.fury.io/py/pure-func
 
 Pure-func is a decorator that helps writing pure functions in python.
 
@@ -42,9 +47,9 @@ Pure-func check
 ---------------
 
 The distance between checks is *base* to the power of *checks* in function
-calls.  Assuming *base=2* on third check it will be check again after 8
-calls.  So it will take exponentially longer after every check for the next
-check to occur.
+calls. Assuming *base=2* on third check it will be check again after 8
+calls. So it will take exponentially longer after every check for the next
+check to occur. It raises *NotPureException* if impurity has been detected.
 
 
 Least-recently-used cache
@@ -72,7 +77,7 @@ Performance
 
 .. code-block:: text
 
-   Plain fibonacci: 5702887 (took 1.86400 seconds)
+   Plain fibonacci: 5702887 (took 1.85545 seconds)
    Fibonacci with pure_func: 5702887 (took 0.00020 seconds)
-   Plain mergesort (took 0.29755 seconds)
-   Mergesort with pure_func (took 0.51440 seconds)
+   Plain mergesort (took 0.29946 seconds)
+   Mergesort with pure_func (took 0.51226 seconds)

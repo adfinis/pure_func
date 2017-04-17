@@ -63,9 +63,9 @@ def pure_func(maxsize=128, typed=False, base=2):
     ---------------
 
     The distance between checks is *base* to the power of *checks* in function
-    calls.  Assuming *base=2* on third check it will be check again after 8
-    calls.  So it will take exponentially longer after every check for the next
-    check to occur.
+    calls. Assuming *base=2* on third check it will be check again after 8
+    calls. So it will take exponentially longer after every check for the next
+    check to occur. It raises *NotPureException* if impurity has been detected.
 
 
     Least-recently-used cache
