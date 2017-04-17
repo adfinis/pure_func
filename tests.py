@@ -16,27 +16,35 @@ def fib(x):
 
 
 @pure_func()
-def test_fib(x, y=0):
+def pure_fib(x):
     """Calculate fibonacci numbers."""
     if x == 0 or x == 1:
         return 1
-    return test_fib(x - 1, (3, )) + test_fib(x - 2)
+    return pure_fib(x - 1) + pure_fib(x - 2)
+
+
+@pure_func(base=1)
+def test_fib(x):
+    """Calculate fibonacci numbers."""
+    if x == 0 or x == 1:
+        return 1
+    return test_fib(x - 1) + test_fib(x - 2)
 
 
 @gcd_lru_cache()
-def gc_fib(x, y=0):
+def gc_fib(x):
     """Calculate fibonacci numbers."""
     if x == 0 or x == 1:
         return 1
-    return test_fib(x - 1, (3, )) + test_fib(x - 2)
+    return gc_fib(x - 1) + gc_fib(x - 2)
 
 
 @pure_func()
-def bad_fib(x, y=0):
+def bad_fib(x):
     """Calculate fibonacci numbers in a bad way."""
     if x == 0 or x == 1:
         return 1
-    return bad_fib(x - 1, (3, )) + bad_fib(x - 2) + random.random()
+    return bad_fib(x - 1) + bad_fib(x - 2) + random.random()
 
 
 def mergesort(pure, x):
@@ -99,9 +107,10 @@ def test():
         )
         print(" (took %3.5f seconds)" % time)
 
-    run_test("Plain fibonacci", "fib", "33")
-    run_test("Fibonacci with pure_func", "test_fib", "33")
-    run_test("Fibonacci with gcd_lru_cache", "gc_fib", "33")
+    run_test("Plain fibonacci", "fib", "30")
+    run_test("Fibonacci with pure_func", "pure_fib", "30")
+    run_test("Fibonacci with gcd_lru_cache", "gc_fib", "30")
+    run_test("Fibonacci with pure_func(base=1]", "test_fib", "30")
 
     error = True
     sys.stdout.write("Check if bad_fib raises NotPureException: ")

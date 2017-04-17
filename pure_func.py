@@ -22,9 +22,15 @@ therefore works best with pyrsistent_.
 Pure-func will break your program if there is hidden state in can't detect. In
 this case you should fix your program.
 
-It can also cause exponential more work if the lru-cache doesn't take effect at
-all. In this case you might consider wrapping your function only for
+It can also cause much more work [1]_ if the lru-cache doesn't take effect at
+all [2]_. In this case you might consider wrapping your function only for
 unit-testing.
+
+.. [1] For a recursive function that calls itself multiple times, the
+       performance penalty can be exponential.
+
+.. [2] For example an algorithm running on floating-point input, might be very
+       hard to cache.
 """
 
 import functools
@@ -105,6 +111,7 @@ def pure_func(maxsize=128, typed=False, clear_on_gc=True, base=2):
     calls. So it will take exponentially longer after every check for the next
     check to occur. It raises *NotPureException* if impurity has been detected.
 
+    If *base=1* the function is always checked.
 
     Least-recently-used cache
     -------------------------
@@ -129,8 +136,8 @@ def pure_func(maxsize=128, typed=False, clear_on_gc=True, base=2):
 
     .. _Wikipedia: http://en.wikipedia.org/wiki/Cache_algorithms#Least_Recently_Used  # noqa
     """
-    if not base > 1:
-        raise ValueError("The base has to greater than one.")
+    if not base >= 1:
+        raise ValueError("The base has to be >= 1.")
 
     def decorator(func):
         if inspect.isgeneratorfunction(func):
@@ -153,19 +160,29 @@ def pure_func(maxsize=128, typed=False, clear_on_gc=True, base=2):
                     cached_func.cache_clear()
             gc.callbacks.append(cb)
 
-        def wrapper(*args, **kwargs):
-            mod = int(base ** func_state.check_count)
-            func_state.call_count = (func_state.call_count + 1) % mod
-            if (func_state.call_count % mod) == 0:
-                func_state.check_count += 1
-                cached_res = cached_func(*args, **kwargs)
+        if base == 1:
+            def wrapper(*args, **kwargs):
                 res = func(*args, **kwargs)
+                cached_res = cached_func(*args, **kwargs)
                 if res != cached_res:
                     raise NotPureException(
                         "%s() has side-effects." % func.__name__
                     )
                 return cached_res
-            return cached_func(*args, **kwargs)
+        else:
+            def wrapper(*args, **kwargs):
+                mod = int(base ** func_state.check_count)
+                func_state.call_count = (func_state.call_count + 1) % mod
+                if (func_state.call_count % mod) == 0:
+                    func_state.check_count += 1
+                    res = func(*args, **kwargs)
+                    cached_res = cached_func(*args, **kwargs)
+                    if res != cached_res:
+                        raise NotPureException(
+                            "%s() has side-effects." % func.__name__
+                        )
+                    return cached_res
+                return cached_func(*args, **kwargs)
 
         wrapper.cache_info = cached_func.cache_info
         wrapper.cache_clear = cached_func.cache_clear
