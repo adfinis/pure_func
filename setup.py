@@ -27,7 +27,7 @@ setup(
         ]
     },
     author = "Adfinis SyGroup AG",
-    author_email = "https://adfinis-sygroup.ch/",
+    author_email = "ganwell@fangorn.ch",
     description = "Pure-func helps to write pure functions in python",
     long_description = README_TEXT,
     keywords = "pure functional programming helper",
