@@ -66,3 +66,13 @@ Access the underlying function with f.__wrapped__.
 See: Wikipedia_
 
 .. _Wikipedia: http://en.wikipedia.org/wiki/Cache_algorithms#Least_Recently_Used  # noqa
+
+Performance
+===========
+
+.. code-block:: text
+
+   Plain fibonacci: 5702887 (took 1.86400 seconds)
+   Fibonacci with pure_func: 5702887 (took 0.00020 seconds)
+   Plain mergesort (took 0.29755 seconds)
+   Mergesort with pure_func (took 0.51440 seconds)

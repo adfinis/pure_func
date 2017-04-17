@@ -30,6 +30,7 @@ unit-testing.
 import functools
 import inspect
 import random
+import sys
 
 __version__ = "1.0"
 __all__ = (
@@ -181,29 +182,33 @@ def mergesort(pure, x):
             return merge(mergesort(pure, x[:h]), mergesort(pure, x[h:]))
 
 
+def write(arg):
+    """Write to stdout."""
+    sys.stdout.write(str(arg))
+
+
 def test():
     """Basic tests and performance mesures."""
     import itertools
-    import sys
     import timeit
 
     def run_test(what, function, arguments, number=1):
         sys.stdout.write("%s: " % what)
         time = timeit.timeit(
-            "print(%s(%s))" % (function, arguments),
-            setup="from %s import %s" % (__name__, function),
+            "write(%s(%s))" % (function, arguments),
+            setup="from %s import %s, write" % (__name__, function),
             number=number
         )
-        print("took %3.5f seconds" % time)
+        print(" (took %3.5f seconds)" % time)
 
     def run_test_no_print(what, function, arguments, number=1):
-        sys.stdout.write("%s: " % what)
+        sys.stdout.write("%s" % what)
         time = timeit.timeit(
             "%s(%s)" % (function, arguments),
             setup="from %s import %s" % (__name__, function),
             number=number
         )
-        print("took %3.5f seconds" % time)
+        print(" (took %3.5f seconds)" % time)
 
     run_test("Plain fibonacci", "fib", "33")
     run_test("Fibonacci with pure_func", "test_fib", "33")
@@ -235,3 +240,7 @@ def test():
         "True, %s" % str(nums),
         number=100
     )
+
+
+if __name__ == "__main__":
+    test()
