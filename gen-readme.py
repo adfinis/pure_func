@@ -31,6 +31,15 @@ pure_func(maxsize=128, typed=False, clear_on_gc=True, base=2)
         line.lstrip() for line in
         pure_func.pure_func.__doc__.splitlines()
     ]))
+    f.write("""
+def gcd_lru_cache(maxsize=128, typed=False):
+============================================
+
+""")
+    f.write(os.linesep.join([
+        line.lstrip() for line in
+        pure_func.gcd_lru_cache.__doc__.splitlines()
+    ]))
 
     f.write("""
 Performance
@@ -52,7 +61,7 @@ Performance
             break
     proc.wait()
     f.write("""
-If you are concerned about performance, you can use *functools.lru_cache*
+If you are concerned about performance, you can use *gcd_lru_cache*
 directly and use pure-func for unit-tests only. Consider this pattern:
 
 .. code-block:: python
@@ -62,7 +71,7 @@ directly and use pure-func for unit-tests only. Consider this pattern:
            return 1
        return rec(x - 1) + rec(x - 2)
 
-    prod_fib = lru_cache()(fib)
+    prod_fib = gcd_lru_cache()(fib)
     prod_fib = functools.partial(prod_fib)
     test_fib = pure_func()(fib)
     test_fib = functools.partial(test_fib)

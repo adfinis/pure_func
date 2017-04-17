@@ -35,6 +35,7 @@ __version__ = "1.1"
 __all__ = (
     'NotPureException',
     'pure_func',
+    'gcd_lru_cache',
 )
 
 
@@ -54,6 +55,43 @@ class FuncState(object):
     def __init__(self):
         self.call_count = 0
         self.check_count = 0
+
+
+def gcd_lru_cache(maxsize=128, typed=False):
+    """Garbage-collected lru-cache.
+
+    If *maxsize* is set to None, the LRU features are disabled and the cache
+    can grow without bound.
+
+    If *typed* is True, arguments of different types will be cached separately.
+    For example, f(3.0) and f(3) will be treated as distinct calls with
+    distinct results.
+
+    The cache is cleared before garbage-collection is run.
+
+    Arguments to the cached function must be hashable.
+
+    View the cache statistics named tuple (hits, misses, maxsize, currsize)
+    with f.cache_info().  Clear the cache and statistics with f.cache_clear().
+    Access the underlying function with f.__wrapped__.
+
+    See: Wikipedia_
+
+    .. _Wikipedia: http://en.wikipedia.org/wiki/Cache_algorithms#Least_Recently_Used  # noqa
+    """
+    def decorator(func):
+        cached_func = functools.lru_cache(
+            maxsize=maxsize,
+            typed=typed
+        )(func)
+
+        def cb(phase, info):
+            if phase == "start":
+                cached_func.cache_clear()
+        gc.callbacks.append(cb)
+        return cached_func
+
+    return decorator
 
 
 def pure_func(maxsize=128, typed=False, clear_on_gc=True, base=2):

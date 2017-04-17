@@ -75,17 +75,42 @@ See: Wikipedia_
 
 .. _Wikipedia: http://en.wikipedia.org/wiki/Cache_algorithms#Least_Recently_Used  # noqa
 
+def gcd_lru_cache(maxsize=128, typed=False):
+============================================
+
+Garbage-collected lru-cache.
+
+If *maxsize* is set to None, the LRU features are disabled and the cache
+can grow without bound.
+
+If *typed* is True, arguments of different types will be cached separately.
+For example, f(3.0) and f(3) will be treated as distinct calls with
+distinct results.
+
+The cache is cleared before garbage-collection is run.
+
+Arguments to the cached function must be hashable.
+
+View the cache statistics named tuple (hits, misses, maxsize, currsize)
+with f.cache_info().  Clear the cache and statistics with f.cache_clear().
+Access the underlying function with f.__wrapped__.
+
+See: Wikipedia_
+
+.. _Wikipedia: http://en.wikipedia.org/wiki/Cache_algorithms#Least_Recently_Used  # noqa
+
 Performance
 ===========
 
 .. code-block:: text
 
-   Plain fibonacci: 5702887 (took 1.83833 seconds)
-   Fibonacci with pure_func: 5702887 (took 0.00022 seconds)
-   Plain mergesort (took 0.33182 seconds)
-   Mergesort with pure_func (took 0.56388 seconds)
+   Plain fibonacci: 5702887 (took 1.84087 seconds)
+   Fibonacci with pure_func: 5702887 (took 0.00021 seconds)
+   Fibonacci with gcd_lru_cache: 5702887 (took 0.00001 seconds)
+   Plain mergesort (took 0.32802 seconds)
+   Mergesort with pure_func (took 0.55361 seconds)
 
-If you are concerned about performance, you can use *functools.lru_cache*
+If you are concerned about performance, you can use *gcd_lru_cache*
 directly and use pure-func for unit-tests only. Consider this pattern:
 
 .. code-block:: python
@@ -95,7 +120,7 @@ directly and use pure-func for unit-tests only. Consider this pattern:
            return 1
        return rec(x - 1) + rec(x - 2)
 
-    prod_fib = lru_cache()(fib)
+    prod_fib = gcd_lru_cache()(fib)
     prod_fib = functools.partial(prod_fib)
     test_fib = pure_func()(fib)
     test_fib = functools.partial(test_fib)

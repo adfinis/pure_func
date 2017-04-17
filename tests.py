@@ -5,7 +5,7 @@ import random
 import sys
 import timeit
 
-from pure_func import NotPureException, pure_func
+from pure_func import NotPureException, gcd_lru_cache, pure_func
 
 
 def fib(x):
@@ -17,6 +17,14 @@ def fib(x):
 
 @pure_func()
 def test_fib(x, y=0):
+    """Calculate fibonacci numbers."""
+    if x == 0 or x == 1:
+        return 1
+    return test_fib(x - 1, (3, )) + test_fib(x - 2)
+
+
+@gcd_lru_cache()
+def gc_fib(x, y=0):
     """Calculate fibonacci numbers."""
     if x == 0 or x == 1:
         return 1
@@ -93,6 +101,7 @@ def test():
 
     run_test("Plain fibonacci", "fib", "33")
     run_test("Fibonacci with pure_func", "test_fib", "33")
+    run_test("Fibonacci with gcd_lru_cache", "gc_fib", "33")
 
     error = True
     sys.stdout.write("Check if bad_fib raises NotPureException: ")
