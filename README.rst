@@ -77,7 +77,24 @@ Performance
 
 .. code-block:: text
 
-   Plain fibonacci: 5702887 (took 1.85545 seconds)
-   Fibonacci with pure_func: 5702887 (took 0.00020 seconds)
-   Plain mergesort (took 0.29946 seconds)
-   Mergesort with pure_func (took 0.51226 seconds)
+   Plain fibonacci: 5702887 (took 1.86333 seconds)
+   Fibonacci with pure_func: 5702887 (took 0.00021 seconds)
+   Plain mergesort (took 0.30165 seconds)
+   Mergesort with pure_func (took 0.52114 seconds)
+
+If you are concerned about performance, you can use functools.lru_cache
+directly and use pure-func for unit-tests only. Consider this pattern:
+
+.. code-block:: python
+
+   def fib(rec, x):
+       if x == 0 or x == 1:
+           return 1
+       return rec(x - 1) + rec(x - 2)
+
+    prod_fib = lru_cache()(fib)
+    prod_fib = functools.partial(prod_fib)
+    test_fib = pure_func()(fib)
+    test_fib = functools.partial(test_fib)
+
+    prod_fib(33)

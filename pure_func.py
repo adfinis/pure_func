@@ -188,7 +188,7 @@ def write(arg):
 
 
 def test():
-    """Basic tests and performance mesures."""
+    """Basic tests and performance measures."""
     import itertools
     import timeit
 
