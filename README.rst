@@ -27,7 +27,7 @@ the function.
 .. _memoization: https://en.wikipedia.org/wiki/Memoization
 
 Pure-func also ensures that the input to the function is immutable and
-therefore work best with pyrsistent_.
+therefore works best with pyrsistent_.
 
 .. _pyrsistent: https://pyrsistent.readthedocs.io/en/latest/
 
@@ -77,12 +77,12 @@ Performance
 
 .. code-block:: text
 
-   Plain fibonacci: 5702887 (took 1.86333 seconds)
-   Fibonacci with pure_func: 5702887 (took 0.00021 seconds)
-   Plain mergesort (took 0.30165 seconds)
-   Mergesort with pure_func (took 0.52114 seconds)
+   Plain fibonacci: 5702887 (took 1.86463 seconds)
+   Fibonacci with pure_func: 5702887 (took 0.00020 seconds)
+   Plain mergesort (took 0.30215 seconds)
+   Mergesort with pure_func (took 0.51478 seconds)
 
-If you are concerned about performance, you can use functools.lru_cache
+If you are concerned about performance, you can use *functools.lru_cache*
 directly and use pure-func for unit-tests only. Consider this pattern:
 
 .. code-block:: python
@@ -98,3 +98,21 @@ directly and use pure-func for unit-tests only. Consider this pattern:
     test_fib = functools.partial(test_fib)
 
     prod_fib(33)
+
+Example
+======
+
+.. code-block:: python
+
+   @pure_func()
+   def fib(x):
+       if x == 0 or x == 1:
+           return 1
+       return fib(x - 1) + fib(x - 2)
+
+    fib(33)
+
+This will drastically speed up calculation of fibonacci numbers, since we
+introduce dynamic-programming, by applying the lru-cache on *fib*. Of course
+fib is better implemented iteratively and is only recursive for the sake of
+example.

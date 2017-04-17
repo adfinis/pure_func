@@ -15,7 +15,7 @@ the function.
 .. _memoization: https://en.wikipedia.org/wiki/Memoization
 
 Pure-func also ensures that the input to the function is immutable and
-therefore work best with pyrsistent_.
+therefore works best with pyrsistent_.
 
 .. _pyrsistent: https://pyrsistent.readthedocs.io/en/latest/
 
@@ -90,7 +90,7 @@ def pure_func(maxsize=128, typed=False, base=2):
     .. _Wikipedia: http://en.wikipedia.org/wiki/Cache_algorithms#Least_Recently_Used  # noqa
     """
     if not base > 1:
-        ValueError("The base has to greater than one.")
+        raise ValueError("The base has to greater than one.")
 
     def decorator(func):
         if inspect.isgeneratorfunction(func):

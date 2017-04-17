@@ -52,7 +52,7 @@ Performance
             break
     proc.wait()
     f.write("""
-If you are concerned about performance, you can use functools.lru_cache
+If you are concerned about performance, you can use *functools.lru_cache*
 directly and use pure-func for unit-tests only. Consider this pattern:
 
 .. code-block:: python
@@ -68,4 +68,22 @@ directly and use pure-func for unit-tests only. Consider this pattern:
     test_fib = functools.partial(test_fib)
 
     prod_fib(33)
+
+Example
+======
+
+.. code-block:: python
+
+   @pure_func()
+   def fib(x):
+       if x == 0 or x == 1:
+           return 1
+       return fib(x - 1) + fib(x - 2)
+
+    fib(33)
+
+This will drastically speed up calculation of fibonacci numbers, since we
+introduce dynamic-programming, by applying the lru-cache on *fib*. Of course
+fib is better implemented iteratively and is only recursive for the sake of
+example.
 """)
