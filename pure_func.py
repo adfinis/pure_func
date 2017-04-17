@@ -8,7 +8,7 @@ pure-func even speeds your function up, since it employs memoization_ to help
 comparing the current state of the function to a past state: Hopefully it has
 no state.
 
-To ensure the performance is good when _memoization doesn't improve speed, the
+To ensure the performance is good when memoization_ doesn't improve speed, the
 purity is checked exponentially less over time as pure-func gains confidence in
 the function.
 
@@ -19,7 +19,12 @@ therefore work best with pyrsistent_.
 
 .. _pyrsistent: https://pyrsistent.readthedocs.io/en/latest/
 
-Pure-func will break your program if there is hidden state in can't detect.
+Pure-func will break your program if there is hidden state in can't detect. In
+this case you should fix your program.
+
+It can also cause exponential more work if the lru-cache doesn't take effect at
+all. In this case you might consider wrapping your function only for
+unit-testing.
 """
 
 import functools
@@ -51,15 +56,16 @@ class FuncState(object):
 
 
 def pure_func(maxsize=128, typed=False, base=2):
-    r"""Check if the function has no side-effects using sampling.
+    """Check if the function has no side-effects using sampling.
 
     Pure-func check
     ---------------
 
-    The distance between checks is *base* \\*\\* *checks* in function calls.
-    Assuming *base=2* on third check it will be check again after 8 calls.
-    So it will take exponentially longer after every check for the next check
-    to occur.
+    The distance between checks is *base* to the power of *checks* in function
+    calls.  Assuming *base=2* on third check it will be check again after 8
+    calls.  So it will take exponentially longer after every check for the next
+    check to occur.
+
 
     Least-recently-used cache
     -------------------------
@@ -77,7 +83,9 @@ def pure_func(maxsize=128, typed=False, base=2):
     with f.cache_info().  Clear the cache and statistics with f.cache_clear().
     Access the underlying function with f.__wrapped__.
 
-    See:  http://en.wikipedia.org/wiki/Cache_algorithms#Least_Recently_Used
+    See: Wikipedia_
+
+    .. _Wikipedia: http://en.wikipedia.org/wiki/Cache_algorithms#Least_Recently_Used  # noqa
     """
     if not base > 1:
         ValueError("The base has to greater than one.")
