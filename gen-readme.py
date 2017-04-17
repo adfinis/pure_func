@@ -23,8 +23,8 @@ Pure-func
 """)
     f.write(pure_func.__doc__)
     f.write("""
-def pure_func(maxsize=128, typed=False, base=2)
-===============================================
+pure_func(maxsize=128, typed=False, clear_on_gc=True, base=2)
+=============================================================
 
 """)
     f.write(os.linesep.join([
@@ -40,7 +40,7 @@ Performance
 
 """)
     proc = subprocess.Popen(
-        ["python", "pure_func.py"],
+        ["python", "tests.py"],
         stdout=subprocess.PIPE
     )
     while True:

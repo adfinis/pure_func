@@ -38,8 +38,8 @@ It can also cause exponential more work if the lru-cache doesn't take effect at
 all. In this case you might consider wrapping your function only for
 unit-testing.
 
-def pure_func(maxsize=128, typed=False, base=2)
-===============================================
+pure_func(maxsize=128, typed=False, clear_on_gc=True, base=2)
+=============================================================
 
 Check if the function has no side-effects using sampling.
 
@@ -62,6 +62,9 @@ If *typed* is True, arguments of different types will be cached separately.
 For example, f(3.0) and f(3) will be treated as distinct calls with
 distinct results.
 
+If *clear_on_gc* is True, the cache is cleared before garbage-collection is
+run.
+
 Arguments to the cached function must be hashable.
 
 View the cache statistics named tuple (hits, misses, maxsize, currsize)
@@ -77,10 +80,10 @@ Performance
 
 .. code-block:: text
 
-   Plain fibonacci: 5702887 (took 1.86463 seconds)
-   Fibonacci with pure_func: 5702887 (took 0.00020 seconds)
-   Plain mergesort (took 0.30215 seconds)
-   Mergesort with pure_func (took 0.51478 seconds)
+   Plain fibonacci: 5702887 (took 1.83833 seconds)
+   Fibonacci with pure_func: 5702887 (took 0.00022 seconds)
+   Plain mergesort (took 0.33182 seconds)
+   Mergesort with pure_func (took 0.56388 seconds)
 
 If you are concerned about performance, you can use *functools.lru_cache*
 directly and use pure-func for unit-tests only. Consider this pattern:

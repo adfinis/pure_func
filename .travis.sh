@@ -2,6 +2,6 @@
 
 set -e
 
-pure-func-test
+./tests.py
 flake8 pure_func.py
-isort
+isort -c
