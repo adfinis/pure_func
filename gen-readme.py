@@ -3,8 +3,9 @@
 
 import codecs
 import os
-import pure_func
 import subprocess
+
+import pure_func
 
 with codecs.open("README.rst", "w") as f:
     f.write("""

@@ -43,6 +43,7 @@ class NotPureException(Exception):
     """This exception indicates that your function has side-effects."""
 
     def __init__(self, message):
+        """Init."""
         self.args = [message]
 
 

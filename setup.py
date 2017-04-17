@@ -1,8 +1,9 @@
 """Setuptools package definition for pure_func."""
 
-from setuptools import setup
 import codecs
 import sys
+
+from setuptools import setup
 
 version = sys.version_info[0]
 if version < 3:
