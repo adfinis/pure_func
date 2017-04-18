@@ -75,8 +75,8 @@ __all__ = (
     'gcd_lru_cache',
 )
 
-_pure_check = 0
-_sampling_check = 0
+__pure_check = 0
+__sampling_check = 0
 
 
 class NotPureException(Exception):
@@ -90,13 +90,13 @@ class NotPureException(Exception):
 @contextmanager
 def checked():
     """Enable checked mode."""
-    global _pure_check
-    _pure_check += 1
+    global __pure_check
+    __pure_check += 1
     try:
         yield
     finally:
-        _pure_check -= 1
-    assert(_pure_check >= 0)
+        __pure_check -= 1
+    assert(__pure_check >= 0)
 
 
 def pure_check():
@@ -125,8 +125,8 @@ def pure_check():
         def wrapper(*args, **kwargs):
             res = func(*args, **kwargs)
             if (
-                    _pure_check == 0 and
-                    _sampling_check == 0
+                    __pure_check == 0 and
+                    __sampling_check == 0
             ) or func_state.checking:
                 return res
             hash((args, kwargs.values()))
@@ -202,19 +202,19 @@ def pure_sampling(base=2):
                 return checked_func(*args, **kwargs)
         else:
             def wrapper(*args, **kwargs):
-                global _sampling_check
-                if _pure_check > 0:
+                global __sampling_check
+                if __pure_check > 0:
                     return checked_func(*args, **kwargs)
                 mod = int(base ** func_state.check_count)
                 func_state.call_count = (func_state.call_count + 1) % mod
                 if (func_state.call_count % mod) == 0:
                     func_state.check_count += 1
-                    _sampling_check += 1
+                    __sampling_check += 1
                     try:
                         return checked_func(*args, **kwargs)
                     finally:
-                        _sampling_check -= 1
-                    assert(_sampling_check >= 0)
+                        __sampling_check -= 1
+                    assert(__sampling_check >= 0)
 
                 return func(*args, **kwargs)
 

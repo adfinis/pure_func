@@ -33,6 +33,14 @@ def bad_check_fib(x):
     return bad_check_fib(x - 1) + bad_check_fib(x - 2) + random.random()
 
 
+@pure_sampling()
+def bad_sample_fib(x):
+    """Calculate fibonacci numbers in a bad way."""
+    if x == 0 or x == 1:
+        return 1
+    return bad_sample_fib(x - 1) + bad_sample_fib(x - 2) + random.random()
+
+
 @pure_check()
 def check_fib(x):
     """Calculate fibonacci numbers."""
@@ -239,6 +247,16 @@ def test():
     try:
         with checked():
             bad_check_fib(20)
+    except NotPureException:
+        print("ok")
+        error = False
+    if error:
+        print("failure")
+        sys.exit(1)
+    error = True
+    sys.stdout.write("Check if bad_sample_fib raises NotPureException: ")
+    try:
+        bad_sample_fib(20)
     except NotPureException:
         print("ok")
         error = False
