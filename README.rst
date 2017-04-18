@@ -71,10 +71,10 @@ pickling errors).
 .. _pyrsistent: https://pyrsistent.readthedocs.io/en/latest/
 
 *pure_sampling* allows to run pure_check in production by calling the checked
-function exponentially less frequent over time. Note that pure_sampling will
-wrap the function in pure_check so you should **not** use both decorators. Also
-if check-mode is enabled *pure_sampling* will always check the function just
-like *pure_check*.
+function exponentially less frequent over time. Note that *pure_sampling* will
+wrap the function in *pure_check* so you should **not** use both decorators.
+Also if check-mode is enabled *pure_sampling* will always check the function
+just like *pure_check*.
 
 **Nice fact:** *with checking*/*@checked()* will enable the check-mode for all
 functions even functions that are called by other functions. So you check your
@@ -123,7 +123,7 @@ See: Wikipedia_
 
 .. _Wikipedia: http://en.wikipedia.org/wiki/Cache_algorithms#Least_Recently_Used  # noqa
 
-Typically gcd_lru_cache is good in tight loop and *functools.lru_cache*
+Typically gcd_lru_cache is good in tight loops and *functools.lru_cache*
 should be used for periodical- or IO-tasks.
 
 @pure_sampling(base=2)
@@ -146,42 +146,44 @@ If check-mode is enabled the function is always checked.
 with checking()
 ===============
 
-Enable checked mode (Context).
+Enable check-mode (Context).
 
 Any functions with decorators *@pure_check()* or *@pure_sampling()* will
-always be checked. Use this in unit-tests to enable checking.
+always be checked. Use this in unit-tests to enable checking. Nesting
+*checking*/*checked* works fine.
 
 @checked()
 ==========
 
-Enable checked mode (Decorator).
+Enable check-mode (Decorator).
 
 Any functions with decorators *@pure_check()* or *@pure_sampling()* will
-always be checked. Use this in unit-tests to enable checking.
+always be checked. Use this in unit-tests to enable checking. Nesting
+*checking*/*checked* works fine.
 
 Performance
 ===========
 
 .. code-block:: text
 
-   Plain fibonacci(20): 10946 (took 0.00352 seconds)
-   Fibonacci(20) with pure_check (direct): 10946 (took 0.01097 seconds)
-   Fibonacci(20) with pure_check (checked): 10946 (took 0.49547 seconds)
-   Fibonacci(20) with pure_sampling: 10946 (took 0.06096 seconds)
-   Fibonacci(20) with pure_sampling (checked): 10946 (took 0.80955 seconds)
-   Plain fibonacci(30): 1346269 (took 0.43242 seconds)
+   Plain fibonacci(20): 10946 (took 0.00355 seconds)
+   Fibonacci(20) with pure_check (direct): 10946 (took 0.01094 seconds)
+   Fibonacci(20) with pure_check (checked): 10946 (took 0.49510 seconds)
+   Fibonacci(20) with pure_sampling: 10946 (took 0.06143 seconds)
+   Fibonacci(20) with pure_sampling (checked): 10946 (took 0.80520 seconds)
+   Plain fibonacci(30): 1346269 (took 0.43304 seconds)
    Fibonacci(30) composed (direct): 1346269 (took 0.00004 seconds)
    Fibonacci(30) composed (checked): 1346269 (took 0.00001 seconds)
    Fibonacci(30) with gcd_lru_cache: 1346269 (took 0.00002 seconds)
-   Plain expansive fibonacci(8): 34 (took 0.68918 seconds)
-   Expansive fibonacci(8) with pure_check: 34 (took 0.68872 seconds)
-   Expansive fibonacci(8) with pure_check (checked): 34 (took 10.44756 seconds)
-   Expansive fibonacci(8) with pure_sampling: 34 (took 1.32815 seconds)
-   Expansive fibonacci(8) with pure_sampling (checked): 34 (took 9.87600 seconds)
-   Plain mergesort (took 1.62395 seconds)
-   Mergesort with pure_check (direct) (took 1.62248 seconds)
-   Mergesort with pure_check (checked) (took 9.41194 seconds)
-   Mergesort with pure_sampling (took 2.72642 seconds)
+   Plain expansive fibonacci(8): 34 (took 0.68884 seconds)
+   Expansive fibonacci(8) with pure_check: 34 (took 0.69115 seconds)
+   Expansive fibonacci(8) with pure_check (checked): 34 (took 10.50940 seconds)
+   Expansive fibonacci(8) with pure_sampling: 34 (took 1.32353 seconds)
+   Expansive fibonacci(8) with pure_sampling (checked): 34 (took 9.81740 seconds)
+   Plain mergesort (took 1.68062 seconds)
+   Mergesort with pure_check (direct) (took 1.63409 seconds)
+   Mergesort with pure_check (checked) (took 9.06751 seconds)
+   Mergesort with pure_sampling (took 2.46552 seconds)
 
 Note that the fibonacci function is very short, please compare to the expansive
 fibonacci tests.

@@ -59,10 +59,10 @@ pickling errors).
 .. _pyrsistent: https://pyrsistent.readthedocs.io/en/latest/
 
 *pure_sampling* allows to run pure_check in production by calling the checked
-function exponentially less frequent over time. Note that pure_sampling will
-wrap the function in pure_check so you should **not** use both decorators. Also
-if check-mode is enabled *pure_sampling* will always check the function just
-like *pure_check*.
+function exponentially less frequent over time. Note that *pure_sampling* will
+wrap the function in *pure_check* so you should **not** use both decorators.
+Also if check-mode is enabled *pure_sampling* will always check the function
+just like *pure_check*.
 
 **Nice fact:** *with checking*/*@checked()* will enable the check-mode for all
 functions even functions that are called by other functions. So you check your
@@ -100,10 +100,11 @@ class NotPureException(Exception):
 
 @contextmanager
 def checking():
-    """Enable checked mode (Context).
+    """Enable check-mode (Context).
 
     Any functions with decorators *@pure_check()* or *@pure_sampling()* will
-    always be checked. Use this in unit-tests to enable checking.
+    always be checked. Use this in unit-tests to enable checking. Nesting
+    *checking*/*checked* works fine.
     """
     global __pure_check
     __pure_check += 1
@@ -115,10 +116,11 @@ def checking():
 
 
 def checked():
-    """Enable checked mode (Decorator).
+    """Enable check-mode (Decorator).
 
     Any functions with decorators *@pure_check()* or *@pure_sampling()* will
-    always be checked. Use this in unit-tests to enable checking.
+    always be checked. Use this in unit-tests to enable checking. Nesting
+    *checking*/*checked* works fine.
     """
     def decorator(func):
         def wrapper(*args, **kwargs):
@@ -292,7 +294,7 @@ def gcd_lru_cache(maxsize=128, typed=False):
 
     .. _Wikipedia: http://en.wikipedia.org/wiki/Cache_algorithms#Least_Recently_Used  # noqa
 
-    Typically gcd_lru_cache is good in tight loop and *functools.lru_cache*
+    Typically gcd_lru_cache is good in tight loops and *functools.lru_cache*
     should be used for periodical- or IO-tasks.
     """
     def decorator(func):
