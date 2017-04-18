@@ -6,7 +6,7 @@ import sys
 import time
 import timeit
 
-from pure_func import (NotPureException, checked, gcd_lru_cache, pure_check,
+from pure_func import (NotPureException, checked, checking, gcd_lru_cache, pure_check,
                        pure_sampling)
 
 
@@ -49,10 +49,10 @@ def check_fib(x):
     return check_fib(x - 1) + check_fib(x - 2)
 
 
+@checked()
 def checked_check_fib(x):
     """Do check_fib checked."""
-    with checked():
-        return check_fib(x)
+    return check_fib(x)
 
 
 @pure_sampling()
@@ -63,10 +63,10 @@ def sample_fib(x):
     return sample_fib(x - 1) + sample_fib(x - 2)
 
 
+@checked()
 def checked_sample_fib(x):
     """Do sample_fib checked."""
-    with checked():
-        return sample_fib(x)
+    return sample_fib(x)
 
 
 def efib(x):
@@ -88,7 +88,7 @@ def check_efib(x):
 
 def checked_check_efib(x):
     """Do check_efib checked."""
-    with checked():
+    with checking():
         return check_efib(x)
 
 
@@ -101,10 +101,10 @@ def sample_efib(x):
     return sample_efib(x - 1) + sample_efib(x - 2)
 
 
+@checked()
 def checked_sample_efib(x):
     """Do sample_efib checked."""
-    with checked():
-        return sample_efib(x)
+    return sample_efib(x)
 
 
 @gcd_lru_cache()
@@ -116,10 +116,10 @@ def composed_fib(x):
     return composed_fib(x - 1) + composed_fib(x - 2)
 
 
+@checked()
 def checked_composed_fib(x):
     """Do composed_fib checked."""
-    with checked():
-        return composed_fib(x)
+    return composed_fib(x)
 
 
 def mergesort(mode, x):
@@ -168,7 +168,7 @@ def mergesort(mode, x):
         elif mode == 1:
             return test_merge(mergesort(mode, x[:h]), mergesort(mode, x[h:]))
         elif mode == 2:
-            with checked():
+            with checking():
                 return test_merge(
                     mergesort(mode, x[:h]),
                     mergesort(mode, x[h:])
@@ -245,7 +245,7 @@ def test():
     error = True
     sys.stdout.write("Check if bad_check_fib raises NotPureException: ")
     try:
-        with checked():
+        with checking():
             bad_check_fib(20)
     except NotPureException:
         print("ok")

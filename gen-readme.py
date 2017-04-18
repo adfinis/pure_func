@@ -23,8 +23,8 @@ Pure-func
 """)
     f.write(pure_func.__doc__)
     f.write("""
-pure_check()
-============
+@pure_check()
+=============
 
 """)
     f.write(os.linesep.join([
@@ -33,8 +33,8 @@ pure_check()
     ]))
 
     f.write("""
-def gcd_lru_cache(maxsize=128, typed=False)
-===========================================
+@gcd_lru_cache(maxsize=128, typed=False)
+========================================
 
 """)
     f.write(os.linesep.join([
@@ -43,13 +43,33 @@ def gcd_lru_cache(maxsize=128, typed=False)
     ]))
 
     f.write("""
-pure_sampling(base=2)
-=====================
+@pure_sampling(base=2)
+======================
 
 """)
     f.write(os.linesep.join([
         line.lstrip() for line in
         pure_func.pure_sampling.__doc__.splitlines()
+    ]))
+
+    f.write("""
+with checking()
+===============
+
+""")
+    f.write(os.linesep.join([
+        line.lstrip() for line in
+        pure_func.checking.__doc__.splitlines()
+    ]))
+
+    f.write("""
+@checked()
+==========
+
+""")
+    f.write(os.linesep.join([
+        line.lstrip() for line in
+        pure_func.checked.__doc__.splitlines()
     ]))
 
     f.write("""
@@ -71,3 +91,12 @@ Performance
         else:
             break
     proc.wait()
+    f.write("""
+Note that the fibonacci function is very short, please compare to the expansive
+fibonacci tests.
+
+License
+=======
+
+MIT
+""")
