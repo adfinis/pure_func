@@ -23,14 +23,15 @@ Pure-func
 """)
     f.write(pure_func.__doc__)
     f.write("""
-pure_cache(maxsize=128, typed=False, clear_on_gc=True, base=2)
-==============================================================
+pure_check()
+============
 
 """)
     f.write(os.linesep.join([
         line.lstrip() for line in
-        pure_func.pure_cache.__doc__.splitlines()
+        pure_func.pure_check.__doc__.splitlines()
     ]))
+
     f.write("""
 def gcd_lru_cache(maxsize=128, typed=False)
 ===========================================
@@ -42,24 +43,16 @@ def gcd_lru_cache(maxsize=128, typed=False)
     ]))
 
     f.write("""
-Example
-=======
+pure_sampling(base=2)
+=====================
 
-.. code-block:: python
+""")
+    f.write(os.linesep.join([
+        line.lstrip() for line in
+        pure_func.pure_sampling.__doc__.splitlines()
+    ]))
 
-   @pure_cache()
-   def fib(x):
-       if x == 0 or x == 1:
-           return 1
-       return fib(x - 1) + fib(x - 2)
-
-    fib(33)
-
-This will drastically speed up calculation of fibonacci numbers, since we
-introduce dynamic-programming, by applying the lru-cache on *fib*. Of course
-fib is better implemented iteratively and is only recursive for the sake of
-example.
-
+    f.write("""
 Performance
 ===========
 
@@ -78,23 +71,3 @@ Performance
         else:
             break
     proc.wait()
-    f.write("""
-If you are concerned about performance, you can use *gcd_lru_cache*
-directly and use *pure_cache* for unit-tests only. Consider this pattern:
-
-.. code-block:: python
-
-   def fib(rec, x):
-       if x == 0 or x == 1:
-           return 1
-       return rec(x - 1) + rec(x - 2)
-
-    prod_fib = gcd_lru_cache()(fib)
-    prod_fib = functools.partial(prod_fib)
-    test_fib = pure_cache(base=1)(fib)
-    test_fib = functools.partial(test_fib)
-
-    prod_fib(33)
-
-*base=1* will ensure that the function is always checked.
-""")
