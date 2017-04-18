@@ -182,8 +182,9 @@ def pure_check():
                 return res
             checks = [0, 1, 2]
             random.shuffle(checks)
+            history = func_state.history
             for check in checks:
-                data = func_state.history[check]
+                data = history[check]
                 if data is not None:
                     arg_tuple = data[0]
                     func_state.checking = True
@@ -196,9 +197,9 @@ def pure_check():
                         func_state.checking = False
             call_count = func_state.call_count
             if (call_count % 13) == 0:
-                func_state.history[2] = func_state.history[1]
-            func_state.history[1] = func_state.history[0]
-            func_state.history[0] = ((args, kwargs), res)
+                history[2] = history[1]
+            history[1] = history[0]
+            history[0] = ((args, kwargs), res)
             func_state.call_count = (call_count + 1) % 13
             return res
 
