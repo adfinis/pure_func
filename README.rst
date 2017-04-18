@@ -129,12 +129,15 @@ Performance
 
 .. code-block:: text
 
-   Plain fibonacci: 1346269 (took 0.44145 seconds)
-   Fibonacci with pure_cache: 1346269 (took 0.00011 seconds)
-   Fibonacci with gcd_lru_cache: 1346269 (took 0.00002 seconds)
-   Fibonacci with pure_cache(base=1]: 1346269 (took 5.47295 seconds)
-   Plain mergesort (took 0.33290 seconds)
-   Mergesort with pure_cache (took 0.55644 seconds)
+   Plain fibonacci(30): 1346269 (took 0.44287 seconds)
+   Fibonacci(30) with pure_cache: 1346269 (took 0.00016 seconds)
+   Fibonacci(30) with gcd_lru_cache: 1346269 (took 0.00002 seconds)
+   Fibonacci(30) with pure_cache(base=1]: 1346269 (took 0.00004 seconds)
+   Plain fibonacci(20): 10946 (took 0.00360 seconds)
+   Fibonacci(20) with pure_check (basic): 10946 (took 0.01024 seconds)
+   Fibonacci(20) with pure_check (checked): 10946 (took 0.50640 seconds)
+   Plain mergesort (took 0.80511 seconds)
+   Mergesort with pure_cache (took 1.21130 seconds)
 
 If you are concerned about performance, you can use *gcd_lru_cache*
 directly and use *pure_cache* for unit-tests only. Consider this pattern:

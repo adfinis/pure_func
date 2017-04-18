@@ -5,7 +5,8 @@ import random
 import sys
 import timeit
 
-from pure_func import NotPureException, gcd_lru_cache, pure_cache
+from pure_func import (NotPureException, checked, gcd_lru_cache, pure_cache,
+                       pure_check)
 
 
 def fib(x):
@@ -45,6 +46,28 @@ def bad_fib(x):
     if x == 0 or x == 1:
         return 1
     return bad_fib(x - 1) + bad_fib(x - 2) + random.random()
+
+
+@pure_check()
+def bad_check_fib(x):
+    """Calculate fibonacci numbers in a bad way."""
+    if x == 0 or x == 1:
+        return 1
+    return bad_fib(x - 1) + bad_fib(x - 2) + random.random()
+
+
+@pure_check()
+def check_fib(x):
+    """Calculate fibonacci numbers."""
+    if x == 0 or x == 1:
+        return 1
+    return check_fib(x - 1) + check_fib(x - 2)
+
+
+def checked_check_fib(x):
+    """Do check_fib checked."""
+    with checked():
+        return check_fib(x)
 
 
 def mergesort(pure, x):
@@ -107,15 +130,33 @@ def test():
         )
         print(" (took %3.5f seconds)" % time)
 
-    run_test("Plain fibonacci", "fib", "30")
-    run_test("Fibonacci with pure_cache", "pure_fib", "30")
-    run_test("Fibonacci with gcd_lru_cache", "gc_fib", "30")
-    run_test("Fibonacci with pure_cache(base=1]", "test_fib", "30")
+    run_test("Plain fibonacci(30)", "fib", "30")
+    run_test("Fibonacci(30) with pure_cache", "pure_fib", "30")
+    run_test("Fibonacci(30) with gcd_lru_cache", "gc_fib", "30")
+    run_test("Fibonacci(30) with pure_cache(base=1]", "test_fib", "30")
+    run_test("Plain fibonacci(20)", "fib", "20")
+    run_test("Fibonacci(20) with pure_check (basic)", "check_fib", "20")
+    run_test(
+        "Fibonacci(20) with pure_check (checked)",
+        "checked_check_fib",
+        "20"
+    )
 
     error = True
     sys.stdout.write("Check if bad_fib raises NotPureException: ")
     try:
-        bad_fib(33)
+        bad_fib(20)
+    except NotPureException:
+        print("ok")
+        error = False
+    if error:
+        print("failure")
+        sys.exit(1)
+
+    error = True
+    sys.stdout.write("Check if bad_check_fib raises NotPureException: ")
+    try:
+        bad_check_fib(20)
     except NotPureException:
         print("ok")
         error = False

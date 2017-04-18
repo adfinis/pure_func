@@ -36,13 +36,18 @@ unit-testing.
 import functools
 import gc
 import inspect
+import random
+from contextlib import contextmanager
 
 __version__ = "1.1"
 __all__ = (
     'NotPureException',
+    'pure_check',
     'pure_cache',
     'gcd_lru_cache',
 )
+
+_pure_check = 0
 
 
 class NotPureException(Exception):
@@ -51,16 +56,6 @@ class NotPureException(Exception):
     def __init__(self, message):
         """Init."""
         self.args = [message]
-
-
-class FuncState(object):
-    """State of the function-wrapper."""
-
-    __slots__ = ('call_count', 'check_count')
-
-    def __init__(self):
-        self.call_count = 0
-        self.check_count = 0
 
 
 def gcd_lru_cache(maxsize=128, typed=False):
@@ -136,6 +131,16 @@ def pure_cache(maxsize=128, typed=False, clear_on_gc=True, base=2):
 
     .. _Wikipedia: http://en.wikipedia.org/wiki/Cache_algorithms#Least_Recently_Used  # noqa
     """
+    class FuncState(object):
+        """State of the function-wrapper."""
+
+        __slots__ = ('call_count', 'check_count', 'checking')
+
+        def __init__(self):
+            self.call_count = 0
+            self.check_count = 0
+            self.checking = False
+
     if not base >= 1:
         raise ValueError("The base has to be >= 1.")
 
@@ -162,29 +167,99 @@ def pure_cache(maxsize=128, typed=False, clear_on_gc=True, base=2):
 
         if base == 1:
             def wrapper(*args, **kwargs):
-                res = func(*args, **kwargs)
                 cached_res = cached_func(*args, **kwargs)
-                if res != cached_res:
-                    raise NotPureException(
-                        "%s() has side-effects." % func.__name__
-                    )
-                return cached_res
-        else:
-            def wrapper(*args, **kwargs):
-                mod = int(base ** func_state.check_count)
-                func_state.call_count = (func_state.call_count + 1) % mod
-                if (func_state.call_count % mod) == 0:
-                    func_state.check_count += 1
+                if func_state.checking:
+                    return cached_res
+                func_state.checking = True
+                try:
                     res = func(*args, **kwargs)
-                    cached_res = cached_func(*args, **kwargs)
                     if res != cached_res:
                         raise NotPureException(
                             "%s() has side-effects." % func.__name__
                         )
                     return cached_res
+                finally:
+                    func.state_checking = False
+        else:
+            def wrapper(*args, **kwargs):
+                mod = int(base ** func_state.check_count)
+                func_state.call_count = (func_state.call_count + 1) % mod
+                if (func_state.call_count % mod) == 0:
+                    cached_res = cached_func(*args, **kwargs)
+                    if func_state.checking:
+                        return cached_res
+                    func_state.check_count += 1
+                    func_state.checking = True
+                    try:
+                        res = func(*args, **kwargs)
+                        if res != cached_res:
+                            raise NotPureException(
+                                "%s() has side-effects." % func.__name__
+                            )
+                        return cached_res
+                    finally:
+                        func_state.checking = False
+
                 return cached_func(*args, **kwargs)
 
         wrapper.cache_info = cached_func.cache_info
         wrapper.cache_clear = cached_func.cache_clear
         return wrapper
+
+    return decorator
+
+
+@contextmanager
+def checked():
+    """Enable checked mode."""
+    global _pure_check
+    _pure_check += 1
+    yield
+    _pure_check -= 1
+
+
+def pure_check():
+    """TODO."""
+    class FuncState(object):
+        """State of the function-wrapper."""
+
+        __slots__ = ('call_count', 'history', 'checking')
+
+        def __init__(self):
+            self.call_count = 0
+            self.history = [None, None, None]
+            self.checking = False
+
+    def decorator(func):
+        func_state = FuncState()
+
+        def wrapper(*args, **kwargs):
+            res = func(*args, **kwargs)
+            if _pure_check == 0 or func_state.checking:
+                return res
+            hash((args, kwargs.values()))
+            checks = [0, 1, 2]
+            random.shuffle(checks)
+            for check in checks:
+                data = func_state.history[check]
+                if data is not None:
+                    arg_tuple = data[0]
+                    func_state.checking = True
+                    try:
+                        if data[1] != func(*arg_tuple[0], **arg_tuple[1]):
+                            raise NotPureException(
+                                "%s() has side-effects." % func.__name__
+                            )
+                    finally:
+                        func_state.checking = False
+            call_count = func_state.call_count
+            if (call_count % 13) == 0:
+                func_state.history[2] = func_state.history[1]
+            func_state.history[1] = func_state.history[0]
+            func_state.history[0] = ((args, kwargs), res)
+            func_state.call_count = (call_count + 1) % 13
+            return res
+
+        return wrapper
+
     return decorator
