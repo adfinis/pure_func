@@ -23,13 +23,13 @@ Pure-func
 """)
     f.write(pure_func.__doc__)
     f.write("""
-pure_func(maxsize=128, typed=False, clear_on_gc=True, base=2)
-=============================================================
+pure_cache(maxsize=128, typed=False, clear_on_gc=True, base=2)
+==============================================================
 
 """)
     f.write(os.linesep.join([
         line.lstrip() for line in
-        pure_func.pure_func.__doc__.splitlines()
+        pure_func.pure_cache.__doc__.splitlines()
     ]))
     f.write("""
 def gcd_lru_cache(maxsize=128, typed=False)
@@ -47,7 +47,7 @@ Example
 
 .. code-block:: python
 
-   @pure_func()
+   @pure_cache()
    def fib(x):
        if x == 0 or x == 1:
            return 1
@@ -80,7 +80,7 @@ Performance
     proc.wait()
     f.write("""
 If you are concerned about performance, you can use *gcd_lru_cache*
-directly and use *pure_func* for unit-tests only. Consider this pattern:
+directly and use *pure_cache* for unit-tests only. Consider this pattern:
 
 .. code-block:: python
 
@@ -91,7 +91,7 @@ directly and use *pure_func* for unit-tests only. Consider this pattern:
 
     prod_fib = gcd_lru_cache()(fib)
     prod_fib = functools.partial(prod_fib)
-    test_fib = pure_func(base=1)(fib)
+    test_fib = pure_cache(base=1)(fib)
     test_fib = functools.partial(test_fib)
 
     prod_fib(33)

@@ -40,7 +40,7 @@ import inspect
 __version__ = "1.1"
 __all__ = (
     'NotPureException',
-    'pure_func',
+    'pure_cache',
     'gcd_lru_cache',
 )
 
@@ -100,7 +100,7 @@ def gcd_lru_cache(maxsize=128, typed=False):
     return decorator
 
 
-def pure_func(maxsize=128, typed=False, clear_on_gc=True, base=2):
+def pure_cache(maxsize=128, typed=False, clear_on_gc=True, base=2):
     """Check if the function has no side-effects using sampling.
 
     Pure-func check

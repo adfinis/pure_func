@@ -44,8 +44,8 @@ unit-testing.
 .. [2] For example an algorithm running on floating-point input, might be very
        hard to cache.
 
-pure_func(maxsize=128, typed=False, clear_on_gc=True, base=2)
-=============================================================
+pure_cache(maxsize=128, typed=False, clear_on_gc=True, base=2)
+==============================================================
 
 Check if the function has no side-effects using sampling.
 
@@ -111,7 +111,7 @@ Example
 
 .. code-block:: python
 
-   @pure_func()
+   @pure_cache()
    def fib(x):
        if x == 0 or x == 1:
            return 1
@@ -129,15 +129,15 @@ Performance
 
 .. code-block:: text
 
-   Plain fibonacci: 1346269 (took 0.44782 seconds)
-   Fibonacci with pure_func: 1346269 (took 0.00011 seconds)
+   Plain fibonacci: 1346269 (took 0.44145 seconds)
+   Fibonacci with pure_cache: 1346269 (took 0.00011 seconds)
    Fibonacci with gcd_lru_cache: 1346269 (took 0.00002 seconds)
-   Fibonacci with pure_func(base=1]: 1346269 (took 5.64212 seconds)
-   Plain mergesort (took 0.33346 seconds)
-   Mergesort with pure_func (took 0.55300 seconds)
+   Fibonacci with pure_cache(base=1]: 1346269 (took 5.47295 seconds)
+   Plain mergesort (took 0.33290 seconds)
+   Mergesort with pure_cache (took 0.55644 seconds)
 
 If you are concerned about performance, you can use *gcd_lru_cache*
-directly and use *pure_func* for unit-tests only. Consider this pattern:
+directly and use *pure_cache* for unit-tests only. Consider this pattern:
 
 .. code-block:: python
 
@@ -148,7 +148,7 @@ directly and use *pure_func* for unit-tests only. Consider this pattern:
 
     prod_fib = gcd_lru_cache()(fib)
     prod_fib = functools.partial(prod_fib)
-    test_fib = pure_func(base=1)(fib)
+    test_fib = pure_cache(base=1)(fib)
     test_fib = functools.partial(test_fib)
 
     prod_fib(33)

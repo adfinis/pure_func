@@ -1,11 +1,11 @@
 #!/usr/bin/env python
-"""Run tests of pure_func."""
+"""Run tests of pure-func."""
 import itertools
 import random
 import sys
 import timeit
 
-from pure_func import NotPureException, gcd_lru_cache, pure_func
+from pure_func import NotPureException, gcd_lru_cache, pure_cache
 
 
 def fib(x):
@@ -15,7 +15,7 @@ def fib(x):
     return fib(x - 1) + fib(x - 2)
 
 
-@pure_func()
+@pure_cache()
 def pure_fib(x):
     """Calculate fibonacci numbers."""
     if x == 0 or x == 1:
@@ -23,7 +23,7 @@ def pure_fib(x):
     return pure_fib(x - 1) + pure_fib(x - 2)
 
 
-@pure_func(base=1)
+@pure_cache(base=1)
 def test_fib(x):
     """Calculate fibonacci numbers."""
     if x == 0 or x == 1:
@@ -39,7 +39,7 @@ def gc_fib(x):
     return gc_fib(x - 1) + gc_fib(x - 2)
 
 
-@pure_func()
+@pure_cache()
 def bad_fib(x):
     """Calculate fibonacci numbers in a bad way."""
     if x == 0 or x == 1:
@@ -60,7 +60,7 @@ def mergesort(pure, x):
         else:
             return (b[0],) + merge(a, b[1:])
 
-    @pure_func()
+    @pure_cache()
     def test_merge(a, b):
         """Merge sort algorithm."""
         if len(a) == 0:
@@ -108,9 +108,9 @@ def test():
         print(" (took %3.5f seconds)" % time)
 
     run_test("Plain fibonacci", "fib", "30")
-    run_test("Fibonacci with pure_func", "pure_fib", "30")
+    run_test("Fibonacci with pure_cache", "pure_fib", "30")
     run_test("Fibonacci with gcd_lru_cache", "gc_fib", "30")
-    run_test("Fibonacci with pure_func(base=1]", "test_fib", "30")
+    run_test("Fibonacci with pure_cache(base=1]", "test_fib", "30")
 
     error = True
     sys.stdout.write("Check if bad_fib raises NotPureException: ")
@@ -134,7 +134,7 @@ def test():
         number=100
     )
     run_test_no_print(
-        "Mergesort with pure_func",
+        "Mergesort with pure_cache",
         "mergesort",
         "True, %s" % str(nums),
         number=100
