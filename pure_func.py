@@ -158,7 +158,7 @@ def pure_check():
         __slots__ = ('call_count', 'history', 'checking')
 
         def __init__(self):
-            self.call_count = 0
+            self.call_count = 1
             self.history = [None, None, None]
             self.checking = False
 
