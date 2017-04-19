@@ -166,25 +166,25 @@ Performance
 
 .. code-block:: text
 
-   Plain fibonacci(20): 10946 (took 0.00351 seconds)
-   Fibonacci(20) with pure_check (direct): 10946 (took 0.01078 seconds)
-   Fibonacci(20) with pure_check (checked): 10946 (took 0.46769 seconds)
-   Fibonacci(20) with pure_sampling: 10946 (took 0.05302 seconds)
-   Fibonacci(20) with pure_sampling(base=1): 10946 (took 0.75143 seconds)
-   Fibonacci(20) with pure_sampling (checked): 10946 (took 0.82869 seconds)
-   Plain fibonacci(30): 1346269 (took 0.43120 seconds)
+   Plain fibonacci(20): 10946 (took 0.00353 seconds)
+   Fibonacci(20) with pure_check (direct): 10946 (took 0.01075 seconds)
+   Fibonacci(20) with pure_check (checked): 10946 (took 0.46707 seconds)
+   Fibonacci(20) with pure_sampling: 10946 (took 0.05350 seconds)
+   Fibonacci(20) with pure_sampling(base=1): 10946 (took 0.75588 seconds)
+   Fibonacci(20) with pure_sampling (checked): 10946 (took 0.83311 seconds)
+   Plain fibonacci(30): 1346269 (took 0.43068 seconds)
    Fibonacci(30) composed (direct): 1346269 (took 0.00004 seconds)
    Fibonacci(30) composed (checked): 1346269 (took 0.00001 seconds)
    Fibonacci(30) with gcd_lru_cache: 1346269 (took 0.00002 seconds)
    Plain expansive fibonacci(8): 34 (took 0.68938 seconds)
-   Expansive fibonacci(8) with pure_check: 34 (took 0.69030 seconds)
-   Expansive fibonacci(8) with pure_check (checked): 34 (took 9.46889 seconds)
-   Expansive fibonacci(8) with pure_sampling: 34 (took 1.34299 seconds)
-   Expansive fibonacci(8) with pure_sampling (checked): 34 (took 8.50257 seconds)
-   Plain mergesort (took 1.61133 seconds)
-   Mergesort with pure_check (direct) (took 1.62333 seconds)
-   Mergesort with pure_check (checked) (took 8.70377 seconds)
-   Mergesort with pure_sampling (took 2.45526 seconds)
+   Expansive fibonacci(8) with pure_check: 34 (took 0.68841 seconds)
+   Expansive fibonacci(8) with pure_check (checked): 34 (took 9.47059 seconds)
+   Expansive fibonacci(8) with pure_sampling: 34 (took 1.34284 seconds)
+   Expansive fibonacci(8) with pure_sampling (checked): 34 (took 8.50167 seconds)
+   Plain mergesort (took 1.60277 seconds)
+   Mergesort with pure_check (direct) (took 1.60405 seconds)
+   Mergesort with pure_check (checked) (took 8.65274 seconds)
+   Mergesort with pure_sampling (took 2.45293 seconds)
 
 Note that the fibonacci function is very short, please compare to the expansive
 fibonacci tests.
@@ -193,3 +193,13 @@ License
 =======
 
 MIT
+
+Changelog
+=========
+
+1.2 - 2017-04-19
+----------------
+
+* Fix setup.py to point to the correct homepage (@lucaswiman)
+
+* Fix @pure_sampling(base=1) not checking at all

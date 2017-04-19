@@ -76,7 +76,7 @@ import inspect
 import random
 from contextlib import contextmanager
 
-__version__ = "1.1"
+__version__ = "1.2"
 __all__ = (
     'NotPureException',
     'pure_check',

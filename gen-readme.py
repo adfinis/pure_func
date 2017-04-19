@@ -99,4 +99,14 @@ License
 =======
 
 MIT
+
+Changelog
+=========
+
+1.2 - 2017-04-19
+----------------
+
+* Fix setup.py to point to the correct homepage (@lucaswiman)
+
+* Fix @pure_sampling(base=1) not checking at all
 """)
