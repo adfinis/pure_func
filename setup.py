@@ -27,7 +27,7 @@ setup(
     description = "Pure-func helps to write pure functions in python",
     long_description = README_TEXT,
     keywords = "pure functional programming unit-testing",
-    url = "http://github.com/adfinis-sygroup/pure-func",
+    url = "http://github.com/adfinis-sygroup/pure_func",
     classifiers = [
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
