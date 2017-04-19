@@ -249,7 +249,13 @@ def pure_sampling(base=2):
 
         if base == 1:
             def wrapper(*args, **kwargs):
-                return checked_func(*args, **kwargs)
+                global __sampling_check
+                __sampling_check += 1
+                try:
+                    return checked_func(*args, **kwargs)
+                finally:
+                    __sampling_check -= 1
+                assert(__sampling_check >= 0)
         else:
             def wrapper(*args, **kwargs):
                 global __sampling_check

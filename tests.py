@@ -63,6 +63,14 @@ def sample_fib(x):
     return sample_fib(x - 1) + sample_fib(x - 2)
 
 
+@pure_sampling(base=1)
+def sample_b1_fib(x):
+    """Calculate fibonacci numbers."""
+    if x == 0 or x == 1:
+        return 1
+    return sample_b1_fib(x - 1) + sample_b1_fib(x - 2)
+
+
 @checked()
 def checked_sample_fib(x):
     """Do sample_fib checked."""
@@ -210,6 +218,7 @@ def test():
         "20"
     )
     run_test("Fibonacci(20) with pure_sampling", "sample_fib", "20")
+    run_test("Fibonacci(20) with pure_sampling(base=1)", "sample_b1_fib", "20")
     run_test(
         "Fibonacci(20) with pure_sampling (checked)",
         "checked_sample_fib",
