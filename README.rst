@@ -97,6 +97,8 @@ checks.
 
 If a check fails *NotPureException* is raised.
 
+If *clear_on_gc* is set to True, past inputs will be cleared on gc
+
 In the end result of the first (normal) execution is returned.
 
 @gcd_lru_cache(maxsize=128, typed=False)
@@ -141,6 +143,8 @@ check to occur. It raises *NotPureException* if impurity has been detected.
 
 If *base=1* the function is always checked.
 
+If *clear_on_gc* is set to True, past inputs will be cleared on gc
+
 If check-mode is enabled the function is always checked.
 
 with checking()
@@ -166,25 +170,26 @@ Performance
 
 .. code-block:: text
 
-   Plain fibonacci(20): 10946 (took 0.00353 seconds)
-   Fibonacci(20) with pure_check (direct): 10946 (took 0.01075 seconds)
-   Fibonacci(20) with pure_check (checked): 10946 (took 0.46707 seconds)
-   Fibonacci(20) with pure_sampling: 10946 (took 0.05350 seconds)
-   Fibonacci(20) with pure_sampling(base=1): 10946 (took 0.75588 seconds)
-   Fibonacci(20) with pure_sampling (checked): 10946 (took 0.83311 seconds)
-   Plain fibonacci(30): 1346269 (took 0.43068 seconds)
-   Fibonacci(30) composed (direct): 1346269 (took 0.00004 seconds)
-   Fibonacci(30) composed (checked): 1346269 (took 0.00001 seconds)
-   Fibonacci(30) with gcd_lru_cache: 1346269 (took 0.00002 seconds)
-   Plain expansive fibonacci(8): 34 (took 0.68938 seconds)
-   Expansive fibonacci(8) with pure_check: 34 (took 0.68841 seconds)
-   Expansive fibonacci(8) with pure_check (checked): 34 (took 9.47059 seconds)
-   Expansive fibonacci(8) with pure_sampling: 34 (took 1.34284 seconds)
-   Expansive fibonacci(8) with pure_sampling (checked): 34 (took 8.50167 seconds)
-   Plain mergesort (took 1.60277 seconds)
-   Mergesort with pure_check (direct) (took 1.60405 seconds)
-   Mergesort with pure_check (checked) (took 8.65274 seconds)
-   Mergesort with pure_sampling (took 2.45293 seconds)
+   Plain fibonacci(20): 10946 (took 0.00246 seconds)
+   Fibonacci(20) with pure_check (direct): 10946 (took 0.00941 seconds)
+   Fibonacci(20) with pure_check (checked): 10946 (took 0.38620 seconds)
+   Fibonacci(20) with pure_check (checked, clear_on_gc): 10946 (took 0.46765 seconds)
+   Fibonacci(20) with pure_sampling: 10946 (took 0.03398 seconds)
+   Fibonacci(20) with pure_sampling(base=1): 10946 (took 0.53920 seconds)
+   Fibonacci(20) with pure_sampling (checked): 10946 (took 0.58838 seconds)
+   Plain fibonacci(30): 1346269 (took 0.29904 seconds)
+   Fibonacci(30) composed (direct): 1346269 (took 0.00003 seconds)
+   Fibonacci(30) composed (checked): 1346269 (took 0.00000 seconds)
+   Fibonacci(30) with gcd_lru_cache: 1346269 (took 0.00001 seconds)
+   Plain expansive fibonacci(8): 34 (took 0.67553 seconds)
+   Expansive fibonacci(8) with pure_check: 34 (took 0.67574 seconds)
+   Expansive fibonacci(8) with pure_check (checked): 34 (took 9.26701 seconds)
+   Expansive fibonacci(8) with pure_sampling: 34 (took 1.31228 seconds)
+   Expansive fibonacci(8) with pure_sampling (checked): 34 (took 8.31121 seconds)
+   Plain mergesort (took 0.99735 seconds)
+   Mergesort with pure_check (direct) (took 1.06019 seconds)
+   Mergesort with pure_check (checked) (took 6.22963 seconds)
+   Mergesort with pure_sampling (took 1.66242 seconds)
 
 Note that the fibonacci function is very short, please compare to the expansive
 fibonacci tests.
