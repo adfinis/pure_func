@@ -136,7 +136,7 @@ def checked():
     return decorator
 
 
-def pure_check():
+def pure_check(clear_on_gc=False):
     """Check if the function has no side-effects during unit-tests.
 
     If check-mode is enabled using *@checked()* or *with checking()* the
@@ -149,6 +149,8 @@ def pure_check():
     checks.
 
     If a check fails *NotPureException* is raised.
+
+    If *clear_on_gc* is set to True, past inputs will be cleared on gc
 
     In the end result of the first (normal) execution is returned.
     """
@@ -172,6 +174,13 @@ def pure_check():
                 "%s() isn't a function." % func.__name__
             )
         func_state = FuncState()
+
+        def cb(phase, info):
+            if phase == "start":
+                func_state.call_count = 1
+                func_state.history = [None, None, None]
+        if clear_on_gc:
+            gc.callbacks.append(cb)
 
         def wrapper(*args, **kwargs):
             res = func(*args, **kwargs)
@@ -208,7 +217,7 @@ def pure_check():
     return decorator
 
 
-def pure_sampling(base=2):
+def pure_sampling(base=2, clear_on_gc=False):
     """Check if the function has no side-effects using sampling.
 
     It allows to run *pure_check* in production by calling the checked function
@@ -220,6 +229,8 @@ def pure_sampling(base=2):
     check to occur. It raises *NotPureException* if impurity has been detected.
 
     If *base=1* the function is always checked.
+
+    If *clear_on_gc* is set to True, past inputs will be cleared on gc
 
     If check-mode is enabled the function is always checked.
     """
@@ -245,7 +256,7 @@ def pure_sampling(base=2):
                 "%s() isn't a function." % func.__name__
             )
         func_state = FuncState()
-        checked_func = pure_check()(func)
+        checked_func = pure_check(clear_on_gc=clear_on_gc)(func)
 
         if base == 1:
             def wrapper(*args, **kwargs):

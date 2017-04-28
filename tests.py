@@ -6,8 +6,8 @@ import sys
 import time
 import timeit
 
-from pure_func import (NotPureException, checked, checking, gcd_lru_cache, pure_check,
-                       pure_sampling)
+from pure_func import (NotPureException, checked, checking, gcd_lru_cache,
+                       pure_check, pure_sampling)
 
 
 def fib(x):
@@ -41,18 +41,35 @@ def bad_sample_fib(x):
     return bad_sample_fib(x - 1) + bad_sample_fib(x - 2) + random.random()
 
 
-@pure_check()
-def check_fib(x):
+def _check_fib(x):
     """Calculate fibonacci numbers."""
     if x == 0 or x == 1:
         return 1
     return check_fib(x - 1) + check_fib(x - 2)
 
 
+@pure_check()
+def check_fib(x):
+    """Calculate fibonacci numbers."""
+    return _check_fib(x)
+
+
+@pure_check(clear_on_gc=True)
+def check_fib_clear_on_gc(x):
+    """Calculate fibonacci numbers."""
+    return _check_fib(x)
+
+
 @checked()
 def checked_check_fib(x):
     """Do check_fib checked."""
     return check_fib(x)
+
+
+@checked()
+def checked_check_fib_clear_on_gc(x):
+    """Do check_fib_clear_on_gc checked."""
+    return check_fib_clear_on_gc(x)
 
 
 @pure_sampling()
@@ -215,6 +232,11 @@ def test():
     run_test(
         "Fibonacci(20) with pure_check (checked)",
         "checked_check_fib",
+        "20"
+    )
+    run_test(
+        "Fibonacci(20) with pure_check (checked, clear_on_gc)",
+        "checked_check_fib_clear_on_gc",
         "20"
     )
     run_test("Fibonacci(20) with pure_sampling", "sample_fib", "20")
