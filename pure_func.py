@@ -130,7 +130,7 @@ def checked():
                 return func(*args, **kwargs)
             finally:
                 __pure_check -= 1
-                assert(__pure_check >= 0)
+            assert(__pure_check >= 0)
 
         return wrapper
     return decorator
